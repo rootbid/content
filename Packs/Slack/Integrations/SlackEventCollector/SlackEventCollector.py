@@ -1,11 +1,11 @@
-import demistomock as demisto
-from CommonServerPython import *  # noqa # pylint: disable=unused-wildcard-import
-from CommonServerUserPython import *  # noqa
+# pylint: disable=no-name-in-module
+# pylint: disable=no-self-argument
 
 from pydantic import Field, parse_obj_as
 
 from SiemApiModule import *  # noqa: E402
 
+urllib3.disable_warnings()
 
 class SlackEventsParams(BaseModel):
     @staticmethod
