@@ -8,19 +8,19 @@ from SiemApiModule import *  # noqa: E402
 
 urllib3.disable_warnings()
 
-class SlackEventsParams(BaseModel):
-    @staticmethod
-    def get_slack_events_to_timestamp_format(value: Any) -> int:
-        """Converting datetime input to Unix timestamp format"""
-        datetime_obj: Optional[datetime]
-        if isinstance(value, int):
-            value = str(value)
-        if not isinstance(value, datetime):
-            datetime_obj = dateparser.parse(value)
-        if datetime_obj is None:
-            raise TypeError(f'Argument is not a valid time: {value}')
-        return int(datetime_obj.timestamp())
 
+def get_slack_events_to_timestamp_format(value: Any) -> int:
+    """Converting datetime input to Unix timestamp format"""
+    datetime_obj: Optional[datetime]
+    if isinstance(value, int):
+        value = str(value)
+    if not isinstance(value, datetime):
+        datetime_obj = dateparser.parse(value)
+    if datetime_obj is None:
+        raise TypeError(f'Argument is not a valid time: {value}')
+    return int(datetime_obj.timestamp())
+
+class SlackEventsParams(BaseModel):
     oldest: Optional[int]
     latest: Optional[int]
     limit: int = Field(1000, alias='limit', gt=0, le=9999)
