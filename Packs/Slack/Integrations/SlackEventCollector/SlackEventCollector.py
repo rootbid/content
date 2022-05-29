@@ -54,14 +54,14 @@ class SlackEventClient(IntegrationEventsClient):
         set_authorization(request, params.get('user_token'))
         options = IntegrationOptions.parse_obj(params)
         super.__init__(request, options)
-    
+
     def set_request_filter(self, _: Any) -> None:
         pass
 
 
 class SlackGetEvents(IntegrationGetEvents):
-    client: SlackEventClient
-    options: IntegrationOptions = client.options
+    def __init__(self, client: IntegrationEventsClient) -> None:
+        super().__init__(client, client.options)
 
     @staticmethod
     def get_last_run(events: list) -> dict:
@@ -69,7 +69,7 @@ class SlackGetEvents(IntegrationGetEvents):
             'oldest': events[-1]['date_create'],
             'last_id': events[-1]['id']
         }
-    
+
     def remove_duplicates(self, events: list) -> list:
         if events and events[0].get('date_create') == self.client.request.params.oldest:
             for idx, event in enumerate(events):

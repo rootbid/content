@@ -9,11 +9,6 @@ configuration:
     type: 9
     required: false
     hiddenusername: true
-  - display: The maximum number of audit logs to fetch
-    name: limit
-    type: 0
-    defaultvalue: 1000
-    required: false
   - defaultvalue: slack
     display: The product name corresponding to the integration that originated the events
     name: product
@@ -24,6 +19,11 @@ configuration:
     name: vendor
     required: false
     type: 0
+  - display: The maximum number of audit logs to fetch
+    name: limit
+    type: 0
+    defaultvalue: 1000
+    required: false
   - display: First fetch time interval
     name: oldest
     type: 0
@@ -105,7 +105,7 @@ script:
   type: python
   subtype: python3
   isfetchevents: true
-  dockerimage: demisto/python3:3.10.4.29342
+  dockerimage: demisto/fastapi:1.0.0.29740
   feed: false
 marketplaces:
 - marketplacev2
