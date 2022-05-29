@@ -2,10 +2,13 @@ import demistomock as demisto
 from CommonServerPython import *  # noqa # pylint: disable=unused-wildcard-import
 from CommonServerUserPython import *  # noqa
 
+from pydantic import Field, parse_obj_as
+
 from SiemApiModule import *  # noqa: E402
 
 
 class SlackEventsParams(BaseModel):
+    @staticmethod
     def get_slack_events_to_timestamp_format(value: Any) -> int:
         """Converting datetime input to Unix timestamp format"""
         datetime_obj: Optional[datetime]
@@ -15,7 +18,7 @@ class SlackEventsParams(BaseModel):
             datetime_obj = dateparser.parse(value)
         if datetime_obj is None:
             raise TypeError(f'Argument is not a valid time: {value}')
-        return datetime_obj.timestamp()
+        return int(datetime_obj.timestamp())
 
     oldest: Optional[int]
     latest: Optional[int]
@@ -58,8 +61,10 @@ class SlackEventClient(IntegrationEventsClient):
 
 class SlackGetEvents(IntegrationGetEvents):
     client: SlackEventClient
+    options: IntegrationOptions = client.options
 
-    def get_last_run(self, events: list) -> dict:
+    @staticmethod
+    def get_last_run(events: list) -> dict:
         return {
             'oldest': events[-1]['date_create'],
             'last_id': events[-1]['id']
@@ -113,7 +118,7 @@ def main(command: str, params: dict) -> None:  # pragma: no cover
                     )
                 )
             elif events:
-                demisto.setLastRun(client.get_last_run(events))
+                demisto.setLastRun(get_events.get_last_run(events))
 
     except Exception as e:
         return_error(f'Failed to execute {command} command.\nError:\n{e}')
