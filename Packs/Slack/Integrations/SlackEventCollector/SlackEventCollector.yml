@@ -105,7 +105,7 @@ script:
   type: python
   subtype: python3
   isfetchevents: true
-  dockerimage: demisto/fastapi:1.0.0.29740
+  dockerimage: demisto/pydantic-jwt3:1.0.0.29203
   feed: false
 marketplaces:
 - marketplacev2
