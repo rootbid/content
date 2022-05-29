@@ -3,45 +3,45 @@ commonfields:
   id: Slack Event Collector
   version: -1
 configuration:
-  - display: ''
-    displaypassword: User Token
-    name: user_token
-    type: 9
-    required: false
-    hiddenusername: true
-  - defaultvalue: slack
-    display: The product name corresponding to the integration that originated the events
-    name: product
-    required: false
-    type: 0
-  - defaultvalue: slack
-    display: The vendor name corresponding to the integration that originated the events
-    name: vendor
-    required: false
-    type: 0
-  - display: The maximum number of audit logs to fetch
-    name: limit
-    type: 0
-    defaultvalue: 1000
-    required: false
-  - display: First fetch time interval
-    name: oldest
-    type: 0
-    defaultvalue: 3 days ago
-    required: false
-    additionalinfo: Data is not available prior to March 2018.
-  - name: insecure
-    display: Trust any certificate (not secure)
-    required: false
-    defaultvalue: "true"
-    type: 8
-    additionalinfo: null
-  - name: proxy
-    display: Use system proxy settings
-    required: false
-    defaultvalue: "true"
-    type: 8
-    additionalinfo: null
+- display: ''
+  displaypassword: User Token
+  name: user_token
+  type: 9
+  required: false
+  hiddenusername: true
+- defaultvalue: slack
+  display: The product name corresponding to the integration that originated the events
+  name: product
+  required: false
+  type: 0
+- defaultvalue: slack
+  display: The vendor name corresponding to the integration that originated the events
+  name: vendor
+  required: false
+  type: 0
+- display: The maximum number of audit logs to fetch
+  name: limit
+  type: 0
+  defaultvalue: 1000
+  required: false
+- display: First fetch time interval
+  name: oldest
+  type: 0
+  defaultvalue: 3 days ago
+  required: false
+  additionalinfo: Data is not available prior to March 2018.
+- name: insecure
+  display: Trust any certificate (not secure)
+  required: false
+  defaultvalue: 'true'
+  type: 8
+  additionalinfo:
+- name: proxy
+  display: Use system proxy settings
+  required: false
+  defaultvalue: 'true'
+  type: 8
+  additionalinfo:
 description: Slack logs event collector integration for XSIAM.
 display: Slack Event Collector
 name: Slack Event Collector
@@ -54,8 +54,8 @@ script:
       isArray: false
       name: should_push_events
       predefined:
-        - 'true'
-        - 'false'
+      - 'true'
+      - 'false'
       required: true
     - default: false
       description: Number of results to return, maximum is 9999.
@@ -101,14 +101,14 @@ script:
     name: slack-get-events
   isfetch: false
   runonce: false
-  script: "-"
+  script: '-'
   type: python
   subtype: python3
   isfetchevents: true
-  dockerimage: demisto/pydantic-jwt3:1.0.0.29203
+  dockerimage: demisto/pydantic-jwt3:1.0.0.29883
   feed: false
 marketplaces:
 - marketplacev2
 fromversion: 6.8.0
 tests:
-  - No tests (auto formatted)
+- No tests (auto formatted)
