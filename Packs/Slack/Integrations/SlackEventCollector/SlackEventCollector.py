@@ -1,6 +1,7 @@
 # pylint: disable=no-name-in-module
 # pylint: disable=no-self-argument
 
+import urllib3
 from pydantic import Field, parse_obj_as
 
 from SiemApiModule import *  # noqa: E402
