@@ -622,7 +622,7 @@ def test_create_ip_destination_group(mocker):
                          'type': 'DSTN_IP',
                          'addresses': [
                              '127.0.0.2',
-                             '127.1.0.1'
+                             '127.0.0.1'
                          ],
                          'description': 'Localhost'},
                      response_path='test_data/responses/'
