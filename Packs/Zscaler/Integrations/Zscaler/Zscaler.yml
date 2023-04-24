@@ -492,6 +492,49 @@ script:
       name: pageSize
     description: Gets a list of groups
     name: zscaler-get-usergroups
+  - arguments:
+    - name: exclude_type
+      auto: PREDEFINED
+      predefined:
+      - DSTN_IP
+      - DSTN_FQDN
+      - DSTN_DOMAIN
+      description: The IP group type to be excluded from results.
+      type: textArea
+    - name: categpry_type
+      auto: PREDEFINED
+      isArray: true
+      predefined:
+      - DSTN_IP
+      - DSTN_FQDN
+      - DSTN_DOMAIN
+      - DSTN_OTHER
+      description: The IP group type to be filtered from results.
+    - name: include_ipv6
+      auto: PREDEFINED
+      defaultValue: 'false'
+      description: Fetch the ipv6 Destination Groups.
+      predefined:
+      - 'true'
+      - 'false'
+    description: Retrieves name and ID dictionary of IPv4/IPv6 destination groups.
+    name: zscaler-get-ip-destination-groups-lite
+    outputs:
+    - contextPath: Zscaler.IPDestinationGroup.ID
+      description: The ID of the IP destination group.
+      type: number
+    - contextPath: Zscaler.IPDestinationGroup.Name 
+      description: The name of the IP destination group.
+      type: string
+    - contextPath: Zscaler.IPDestinationGroup.Extensions
+      description: Type of IP destination group.
+      type: output.type.dropdown.json
+  - arguments:
+    - name: ip_group_id
+      description: The unique identifier for the IP destination group.
+      type: textArea
+    description: Deletes the IP destination group for the specified group ID.
+    name: zscaler-delete-ip-destination-group
   runonce: false
   script: ''
   subtype: python3

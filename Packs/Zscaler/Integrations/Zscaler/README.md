@@ -956,3 +956,52 @@ Gets a list of groups
 #### Context Output
 
 There is no context output for this command.
+
+
+#### Base Command
+
+`zscaler-get-ip-destination-groups-lite`
+#### Input
+
+| **Argument Name** | **Description** | **Required** |
+| --- | --- | --- |
+| exclude_type | The IP group type to be excluded from results. Possible values are: DSTN_IP, DSTN_FQDN, DSTN_DOMAIN. | Optional | 
+| categpry_type | The IP group type to be filtered from results. Possible values are: DSTN_IP, DSTN_FQDN, DSTN_DOMAIN, DSTN_OTHER. | Optional | 
+| include_ipv6 | Fetch the ipv6 Destination Groups. | Optional | 
+
+
+#### Context Output
+
+| **Path** | **Type** | **Description** |
+| --- | --- | --- |
+| Zscaler.IPDestinationGroup.ID | number | The ID of the IP destination group. | 
+| Zscaler.IPDestinationGroup.Name | string | The name of the IP destination group. | 
+| Zscaler.IPDestinationGroup.Extensions | json | Type of IP destination group. | 
+
+
+#### Command Example
+```!zscaler-get-ip-destination-groups-lite```
+
+#### Context Example
+```json
+[
+    {
+        "id": 1964949, 
+        "name": "Russia-Region", 
+        "extensions": {"type": "DSTN_OTHER"}
+    }
+]
+```
+
+#### Base Command
+
+`zscaler-delete-ip-destination-group`
+#### Input
+
+| **Argument Name** | **Description** | **Required** |
+| --- | --- | --- |
+| ip_group_id | The unique identifier for the IP destination group. | Required | 
+
+#### Context Output
+
+There is no context output for this command.

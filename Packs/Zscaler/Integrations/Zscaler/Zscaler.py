@@ -61,15 +61,14 @@ AUTO_ACTIVATE_CHANGES_COMMANDS = (
     'zscaler-category-add-url',
     'zscaler-category-add-ip',
     'zscaler-category-remove-url',
-    'zscaler-category-remove-ip'
+    'zscaler-category-remove-ip',
+    'zscaler-get-ip-destination-groups-lite',
+    'zscaler-delete-ip-destination-group'
 )
 
 ''' HANDLE PROXY '''
-if not PROXY:  # pragma: no cover
-    del os.environ['HTTP_PROXY']
-    del os.environ['HTTPS_PROXY']
-    del os.environ['http_proxy']
-    del os.environ['https_proxy']
+# Remove proxy if not set to true in params
+handle_proxy()
 
 ''' HELPER CLASSES '''
 
@@ -1016,6 +1015,106 @@ def set_user_command(args):
         return responseJson
 
 
+def get_ip_destination_groups_lite_command(args):
+    exclude_type = str(args.get('exclude_type', '')).strip()
+    category_type = argToList(args.get('type', []))
+    include_ipv6 = argToBoolean(args.get('include_ipv6', False))
+    if include_ipv6:
+        try:
+            ipv4_cmd_url = "/ipDestinationGroups/lite"
+            ipv6_cmd_url = f"/ipDestinationGroups/ipv6DestinationGroups/lite"
+            if exclude_type != '':
+                ipv4_cmd_url += f"?excludeType={exclude_type}"
+                ipv6_cmd_url += f"?excludeType={exclude_type}"
+            else:
+                for i in range(len(category_type)):
+                    if i == 0:
+                        ipv4_cmd_url += f"?type={category_type[i]}"
+                        ipv6_cmd_url += f"?type={category_type[i]}"
+                    else:
+                        ipv4_cmd_url += f"&type={category_type[i]}"
+                        ipv6_cmd_url += f"&type={category_type[i]}"
+
+            ipv4_responses = http_request('GET', ipv4_cmd_url).json()
+            ipv6_responses = http_request('GET', ipv6_cmd_url).json()
+        except json.decoder.JSONDecodeError as exp:
+            return_error(f'Falied to execute zscaler-get-ip-destination-groups-lite command. Error: {str(exp)}')
+        ipv4_contents = list()
+        ipv6_contents = list()
+        for response in ipv4_responses:
+            content = {
+                'ID': response.get('id', ''),
+                'Name': response.get('name', ''),
+                'extensions': response.get('extensions', {})
+            }
+            ipv4_contents.append(content)
+        for response in ipv6_responses:
+            content = {
+                'ID': response.get('id', ''),
+                'Name': response.get('name', ''),
+                'extensions': response.get('extensions', {})
+            }
+            ipv6_contents.append(content)
+        s_content = {
+            "IPv4": ipv4_contents,
+            "IPv6": ipv6_contents
+        }
+        entry = {
+            'Type': entryTypes['note'],
+            'Contents': s_content,
+            'ContentsFormat': formats['json'],
+            'ReadableContentsFormat': formats['markdown'],
+            'HumanReadable': tableToMarkdown("IPv4 Destination groups lite ({})".format(len(ipv4_contents)), ipv4_contents)+"\n\n"+tableToMarkdown("IPv6 Destination groups lite ({})".format(len(ipv6_contents)), ipv6_contents),
+            'EntryContext': {'Zscaler.IPDestinationGroup': s_content},
+        }
+    else:
+        try:
+            cmd_url = "/ipDestinationGroups/lite"
+            if exclude_type != '':
+                cmd_url += f"?excludeType={exclude_type}"
+            else:
+                for i in range(len(category_type)):
+                    if i == 0:
+                        cmd_url += f"?type={category_type[i]}"
+                    else:
+                        cmd_url += f"&type={category_type[i]}"
+            
+            responses = http_request('GET', cmd_url).json()
+        except json.decoder.JSONDecodeError as exp:
+            return_error(f'Falied to execute zscaler-get-ip-destination-groups-lite command. Error: {str(exp)}')
+        contents = list()
+        for response in responses:
+            content = {
+                'ID': response.get('id', ''),
+                'Name': response.get('name', ''),
+                'extensions': response.get('extensions', {})
+            }
+            contents.append(content)
+        entry = {
+            'Type': entryTypes['note'],
+            'Contents': contents,
+            'ContentsFormat': formats['json'],
+            'ReadableContentsFormat': formats['markdown'],
+            'HumanReadable': tableToMarkdown("IPv4 Destination groups lite({})".format(len(contents)), contents),
+            'EntryContext': {'Zscaler.IPDestinationGroup': contents},
+        }
+
+    return entry
+
+def delete_ip_destination_group(args):
+    ip_group_id = str(args.get('ip_group_id', '')).strip()
+    cmd_url = f"/ipDestinationGroups/{ip_group_id}"
+    response = http_request('DELETE', cmd_url, None, DEFAULT_HEADERS)
+    entry = {
+        'Type': entryTypes['note'],
+        'Contents': None,
+        'ContentsFormat': formats['json'],
+        'ReadableContentsFormat': formats['markdown'],
+        'HumanReadable': "IP Destination Group {} deleted successfully".format(ip_group_id),
+        'EntryContext': None
+    }
+    return entry
+
 ''' EXECUTION CODE '''
 
 
@@ -1081,6 +1180,10 @@ def main():  # pragma: no cover
                 return_results(get_departments_command(demisto.args()))
             elif command == 'zscaler-get-usergroups':
                 return_results(get_usergroups_command(demisto.args()))
+            elif command == 'zscaler-get-ip-destination-groups-lite':
+                return_results(get_ip_destination_groups_lite_command(demisto.args()))
+            elif command == 'zscaler-delete-ip-destination-group':
+                return_results(delete_ip_destination_group(demisto.args()))
         except Exception as e:
             LOG(str(e))
             LOG.print_log()
