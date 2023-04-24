@@ -1133,7 +1133,7 @@ def list_ip_destination_groups(args: dict):
                 'Contents': contents,
                 'ContentsFormat': formats['json'],
                 'ReadableContentsFormat': formats['markdown'],
-                'HumanReadable': tableToMarkdown(("IP Destination groups"
+                'HumanReadable': tableToMarkdown(("IPv4 Destination groups"
                                                   + f" ({len(contents)})"),
                                                  contents),
                 'EntryContext': {'Zscaler.IPDestinationGroup': contents},

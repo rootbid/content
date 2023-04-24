@@ -22,7 +22,7 @@
     ],
     "ContentsFormat": "json",
     "ReadableContentsFormat": "markdown",
-    "HumanReadable": "### IP Destination groups (2)\n|Addresses|Countries|Description|ID|IpCategories|Name|Type|\n|---|---|---|---|---|---|---|\n| 127.0.0.2 |  | Localhost v2 | 1997898 |  | Test99 | DSTN_IP |\n| 127.0.0.1 |  | Localhost v1 | 2001335 |  | Test01 | DSTN_IP |\n",
+    "HumanReadable": "### IPv4 Destination groups (2)\n|Addresses|Countries|Description|ID|IpCategories|Name|Type|\n|---|---|---|---|---|---|---|\n| 127.0.0.2 |  | Localhost v2 | 1997898 |  | Test99 | DSTN_IP |\n| 127.0.0.1 |  | Localhost v1 | 2001335 |  | Test01 | DSTN_IP |\n",
     "EntryContext": {
       "Zscaler.IPDestinationGroup": [
         {
