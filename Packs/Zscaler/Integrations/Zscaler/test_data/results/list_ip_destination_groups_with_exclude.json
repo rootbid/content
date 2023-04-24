@@ -1,0 +1,48 @@
+{
+    "Type": 1,
+    "Contents": [
+      {
+        "ID": 1997898, 
+        "Name": "Test99", 
+        "Type": "DSTN_IP", 
+        "Addresses": ["127.0.0.2"], 
+        "Description": "Localhost v2", 
+        "IpCategories": [], 
+        "Countries": []
+      },
+      {
+        "ID": 2001335, 
+        "Name": "Test01", 
+        "Type": "DSTN_IP", 
+        "Addresses": ["127.0.0.1"], 
+        "Description": "Localhost v1", 
+        "IpCategories": [], 
+        "Countries": []
+      }      
+    ],
+    "ContentsFormat": "json",
+    "ReadableContentsFormat": "markdown",
+    "HumanReadable": "### IP Destination groups (2)\n|Addresses|Countries|Description|ID|IpCategories|Name|Type|\n|---|---|---|---|---|---|---|\n| 127.0.0.2 |  | Localhost v2 | 1997898 |  | Test99 | DSTN_IP |\n| 127.0.0.1 |  | Localhost v1 | 2001335 |  | Test01 | DSTN_IP |\n",
+    "EntryContext": {
+      "Zscaler.IPDestinationGroup": [
+        {
+          "ID": 1997898, 
+          "Name": "Test99", 
+          "Type": "DSTN_IP", 
+          "Addresses": ["127.0.0.2"], 
+          "Description": "Localhost v2", 
+          "IpCategories": [], 
+          "Countries": []
+        },
+        {
+          "ID": 2001335, 
+          "Name": "Test01", 
+          "Type": "DSTN_IP", 
+          "Addresses": ["127.0.0.1"], 
+          "Description": "Localhost v1", 
+          "IpCategories": [], 
+          "Countries": []
+        }      
+      ]
+    }
+}
