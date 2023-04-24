@@ -523,7 +523,7 @@ script:
     - contextPath: Zscaler.IPDestinationGroup.ID
       description: The ID of the IP destination group.
       type: number
-    - contextPath: Zscaler.IPDestinationGroup.Name 
+    - contextPath: Zscaler.IPDestinationGroup.Name
       description: The name of the IP destination group.
       type: string
     - contextPath: Zscaler.IPDestinationGroup.Extensions
@@ -538,7 +538,7 @@ script:
   runonce: false
   script: ''
   subtype: python3
-  dockerimage: demisto/python3:3.10.9.42476
+  dockerimage: demisto/python3:3.10.11.55362
   type: python
 fromversion: 5.0.0
 tests:
