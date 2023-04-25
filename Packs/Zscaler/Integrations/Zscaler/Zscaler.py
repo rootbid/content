@@ -1093,8 +1093,8 @@ def list_ip_destination_groups(args: dict):
                 **ipv4_contents,
                 **ipv6_contents
             }
-            hr = tableToMarkdown(f"IPv4 Destination groups ({len(ipv4_contents)})", ipv4_contents)
-            hr += tableToMarkdown(f"IPv6 Destination groups ({len(ipv6_contents)})", ipv6_contents)
+            hr = tableToMarkdown(f"IPv4 Destination groups ({len(ipv4_contents['IPv4'])})", ipv4_contents['IPv4'])
+            hr += tableToMarkdown(f"IPv6 Destination groups ({len(ipv6_contents['IPv6'])})", ipv6_contents['IPv6'])
             entry = {
                 'Type': entryTypes['note'],
                 'Contents': s_content,
