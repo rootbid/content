@@ -1014,89 +1014,76 @@ def set_user_command(args):
     else:
         return responseJson
 
+def get_contents_lite(responses, ip_type):
+    contents = list()
+    for response in responses:
+        content = {
+            'ID': response.get('id', ''),
+            'Name': response.get('name', ''),
+            'extensions': response.get('extensions', {})
+        }
+        contents.append(content)
+    return {ip_type: contents}
 
 def get_ip_destination_groups_lite_command(args):
     exclude_type = str(args.get('exclude_type', '')).strip()
-    category_type = argToList(args.get('type', []))
-    include_ipv6 = argToBoolean(args.get('include_ipv6', False))
+    category_type = argToList(args.get('type', ''))
+    include_ipv6 = argToBoolean(args.get('include_IPv6', False))
     if include_ipv6:
+        ipv4_cmd_url = "/ipDestinationGroups/lite"
+        ipv6_cmd_url = "/ipDestinationGroups/ipv6DestinationGroups/lite"
+        if exclude_type:
+            exclude_type_param = f"?excludeType={exclude_type}&"
+        else:
+            exclude_type_param = "?"
+        type_params = [f"type={t}" for t in category_type]
+        type_params_str = "&".join(type_params)
+        ipv4_cmd_url += exclude_type_param +  type_params_str
+        ipv6_cmd_url += exclude_type_param + type_params_str
         try:
-            ipv4_cmd_url = "/ipDestinationGroups/lite"
-            ipv6_cmd_url = f"/ipDestinationGroups/ipv6DestinationGroups/lite"
-            if exclude_type != '':
-                ipv4_cmd_url += f"?excludeType={exclude_type}"
-                ipv6_cmd_url += f"?excludeType={exclude_type}"
-            else:
-                for i in range(len(category_type)):
-                    if i == 0:
-                        ipv4_cmd_url += f"?type={category_type[i]}"
-                        ipv6_cmd_url += f"?type={category_type[i]}"
-                    else:
-                        ipv4_cmd_url += f"&type={category_type[i]}"
-                        ipv6_cmd_url += f"&type={category_type[i]}"
-
             ipv4_responses = http_request('GET', ipv4_cmd_url).json()
             ipv6_responses = http_request('GET', ipv6_cmd_url).json()
         except json.decoder.JSONDecodeError as exp:
             return_error(f'Falied to execute zscaler-get-ip-destination-groups-lite command. Error: {str(exp)}')
-        ipv4_contents = list()
-        ipv6_contents = list()
-        for response in ipv4_responses:
-            content = {
-                'ID': response.get('id', ''),
-                'Name': response.get('name', ''),
-                'extensions': response.get('extensions', {})
-            }
-            ipv4_contents.append(content)
-        for response in ipv6_responses:
-            content = {
-                'ID': response.get('id', ''),
-                'Name': response.get('name', ''),
-                'extensions': response.get('extensions', {})
-            }
-            ipv6_contents.append(content)
+
+        ipv4_contents = get_contents_lite(ipv4_responses, "IPv4")
+        ipv6_contents = get_contents_lite(ipv6_responses, "IPv6")
         s_content = {
-            "IPv4": ipv4_contents,
-            "IPv6": ipv6_contents
+            **ipv4_contents,
+            **ipv6_contents
         }
         entry = {
             'Type': entryTypes['note'],
             'Contents': s_content,
             'ContentsFormat': formats['json'],
             'ReadableContentsFormat': formats['markdown'],
-            'HumanReadable': tableToMarkdown("IPv4 Destination groups lite ({})".format(len(ipv4_contents)), ipv4_contents)+"\n\n"+tableToMarkdown("IPv6 Destination groups lite ({})".format(len(ipv6_contents)), ipv6_contents),
+            'HumanReadable': tableToMarkdown("IPv4 Destination groups lite ({})".format(len(s_content['IPv4'])), s_content['IPv4'])+
+                            "\n\n"+tableToMarkdown("IPv6 Destination groups lite ({})".format(len(s_content['IPv6'])), s_content['IPv6']),
             'EntryContext': {'Zscaler.IPDestinationGroup': s_content},
         }
     else:
+        cmd_url = "/ipDestinationGroups/lite"
+        if exclude_type:
+            exclude_type_param = f"?excludeType={exclude_type}&"
+        else:
+            exclude_type_param = "?"
+        type_params = [f"type={t}" for t in category_type]
+        type_params_str = "&".join(type_params)
+        cmd_url += exclude_type_param +  type_params_str
         try:
-            cmd_url = "/ipDestinationGroups/lite"
-            if exclude_type != '':
-                cmd_url += f"?excludeType={exclude_type}"
-            else:
-                for i in range(len(category_type)):
-                    if i == 0:
-                        cmd_url += f"?type={category_type[i]}"
-                    else:
-                        cmd_url += f"&type={category_type[i]}"
-            
             responses = http_request('GET', cmd_url).json()
         except json.decoder.JSONDecodeError as exp:
             return_error(f'Falied to execute zscaler-get-ip-destination-groups-lite command. Error: {str(exp)}')
-        contents = list()
-        for response in responses:
-            content = {
-                'ID': response.get('id', ''),
-                'Name': response.get('name', ''),
-                'extensions': response.get('extensions', {})
-            }
-            contents.append(content)
+
+        contents = get_contents_lite(responses, "IPv4")
+
         entry = {
             'Type': entryTypes['note'],
-            'Contents': contents,
+            'Contents': contents['IPv4'],
             'ContentsFormat': formats['json'],
             'ReadableContentsFormat': formats['markdown'],
-            'HumanReadable': tableToMarkdown("IPv4 Destination groups lite({})".format(len(contents)), contents),
-            'EntryContext': {'Zscaler.IPDestinationGroup': contents},
+            'HumanReadable': tableToMarkdown("IPv4 Destination groups lite({})".format(len(contents['IPv4'])), contents['IPv4']),
+            'EntryContext': {'Zscaler.IPDestinationGroup': contents['IPv4']},
         }
 
     return entry

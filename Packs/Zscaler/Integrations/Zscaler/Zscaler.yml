@@ -510,7 +510,7 @@ script:
       - DSTN_DOMAIN
       - DSTN_OTHER
       description: The IP group type to be filtered from results.
-    - name: include_ipv6
+    - name: include_IPv6
       auto: PREDEFINED
       defaultValue: 'false'
       description: Fetch the ipv6 Destination Groups.
