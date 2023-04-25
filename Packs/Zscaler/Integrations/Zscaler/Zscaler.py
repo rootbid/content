@@ -1052,13 +1052,14 @@ def get_ip_destination_groups_lite_command(args):
             **ipv4_contents,
             **ipv6_contents
         }
+        hr = tableToMarkdown(f"IPv4 Destination groups lite({len(ipv4_contents['IPv4'])})", ipv4_contents['IPv4'])
+        hr += tableToMarkdown(f"IPv6 Destination groups lite({len(ipv6_contents['IPv6'])})", ipv6_contents['IPv6'])
         entry = {
             'Type': entryTypes['note'],
             'Contents': s_content,
             'ContentsFormat': formats['json'],
             'ReadableContentsFormat': formats['markdown'],
-            'HumanReadable': tableToMarkdown("IPv4 Destination groups lite ({})".format(len(s_content['IPv4'])), s_content['IPv4'])+
-                            "\n\n"+tableToMarkdown("IPv6 Destination groups lite ({})".format(len(s_content['IPv6'])), s_content['IPv6']),
+            'HumanReadable': hr,
             'EntryContext': {'Zscaler.IPDestinationGroup': s_content},
         }
     else:
@@ -1075,15 +1076,17 @@ def get_ip_destination_groups_lite_command(args):
         except json.decoder.JSONDecodeError as exp:
             return_error(f'Falied to execute zscaler-get-ip-destination-groups-lite command. Error: {str(exp)}')
 
-        contents = get_contents_lite(responses, "IPv4")
+        contents = get_contents_lite(responses, "IPv4")["IPv4"]
 
         entry = {
             'Type': entryTypes['note'],
-            'Contents': contents['IPv4'],
+            'Contents': contents,
             'ContentsFormat': formats['json'],
             'ReadableContentsFormat': formats['markdown'],
-            'HumanReadable': tableToMarkdown("IPv4 Destination groups lite({})".format(len(contents['IPv4'])), contents['IPv4']),
-            'EntryContext': {'Zscaler.IPDestinationGroup': contents['IPv4']},
+            'HumanReadable': tableToMarkdown(("IPv4 Destination groups lite"
+                                                  + f"({len(contents)})"),
+                                                 contents),
+            'EntryContext': {'Zscaler.IPDestinationGroup': contents},
         }
 
     return entry
