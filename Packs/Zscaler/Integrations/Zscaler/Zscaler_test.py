@@ -567,8 +567,8 @@ def test_get_usergroups_command(mocker):
                      expected_result_path='test_data/results/get_usergroups.json',
                      mocker=mocker)
 
-def test_get_ip_destination_groups_lite_command(mocker):
-    """zscaler-get-ip-destination-groups-lite"""
+def test_list_ip_destination_groups_lite_command(mocker):
+    """zscaler-list-ip-destination-groups-lite"""
     import Zscaler
     run_command_test(command_func=Zscaler.get_ip_destination_groups_lite_command,
                      args={},

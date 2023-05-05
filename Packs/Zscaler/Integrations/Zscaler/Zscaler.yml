@@ -518,27 +518,18 @@ script:
       - 'true'
       - 'false'
     description: Retrieves name and ID dictionary of IPv4/IPv6 destination groups.
-    name: zscaler-get-ip-destination-groups-lite
-    outputs:
-    - contextPath: Zscaler.IPDestinationGroup.ID
-      description: The ID of the IP destination group.
-      type: number
-    - contextPath: Zscaler.IPDestinationGroup.Name
-      description: The name of the IP destination group.
-      type: string
-    - contextPath: Zscaler.IPDestinationGroup.Extensions
-      description: Type of IP destination group.
-      type: output.type.dropdown.json
+    name: zscaler-list-ip-destination-groups-lite
   - arguments:
-    - name: ip_group_id
+    - name: ip_group_ids
       description: The unique identifier for the IP destination group.
       type: textArea
+      isArray: true
     description: Deletes the IP destination group for the specified group ID.
     name: zscaler-delete-ip-destination-group
   runonce: false
   script: ''
   subtype: python3
-  dockerimage: demisto/python3:3.10.11.55362
+  dockerimage: demisto/python3:3.10.11.57293
   type: python
 fromversion: 5.0.0
 tests:

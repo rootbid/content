@@ -960,7 +960,7 @@ There is no context output for this command.
 
 #### Base Command
 
-`zscaler-get-ip-destination-groups-lite`
+`zscaler-list-ip-destination-groups-lite`
 #### Input
 
 | **Argument Name** | **Description** | **Required** |
@@ -980,7 +980,7 @@ There is no context output for this command.
 
 
 #### Command Example
-```!zscaler-get-ip-destination-groups-lite```
+```!zscaler-list-ip-destination-groups-lite```
 
 #### Context Example
 ```json

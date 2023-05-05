@@ -62,7 +62,7 @@ AUTO_ACTIVATE_CHANGES_COMMANDS = (
     'zscaler-category-add-ip',
     'zscaler-category-remove-url',
     'zscaler-category-remove-ip',
-    'zscaler-get-ip-destination-groups-lite',
+    'zscaler-list-ip-destination-groups-lite',
     'zscaler-delete-ip-destination-group'
 )
 
@@ -1017,11 +1017,15 @@ def set_user_command(args):
 def get_contents_lite(responses, ip_type):
     contents = list()
     for response in responses:
-        content = {
-            'ID': response.get('id', ''),
-            'Name': response.get('name', ''),
-            'extensions': response.get('extensions', {})
-        }
+        content = dict()
+        for key, value in response.items():
+            if key == "extensions":
+                for extensions_key, extensions_value in value.items():
+                    content[f"{extensions_key.capitalize()}"] = extensions_value
+            elif key == "id":
+                content[key.upper()] = value
+            else:
+                content[key.capitalize()] = value
         contents.append(content)
     return {ip_type: contents}
 
@@ -1053,14 +1057,14 @@ def get_ip_destination_groups_lite_command(args):
             **ipv6_contents
         }
         hr = tableToMarkdown(f"IPv4 Destination groups lite({len(ipv4_contents['IPv4'])})", ipv4_contents['IPv4'])
-        hr += tableToMarkdown(f"IPv6 Destination groups lite({len(ipv6_contents['IPv6'])})", ipv6_contents['IPv6'])
+        hr += tableToMarkdown(f"IPv6 Destination groups lite({len(ipv6_contents['IPv6'])})", ipv6_contents['IPv6'], removeNull=True)
         entry = {
             'Type': entryTypes['note'],
             'Contents': s_content,
             'ContentsFormat': formats['json'],
             'ReadableContentsFormat': formats['markdown'],
             'HumanReadable': hr,
-            'EntryContext': {'Zscaler.IPDestinationGroup': s_content},
+            'EntryContext': None,
         }
     else:
         cmd_url = "/ipDestinationGroups/lite"
@@ -1085,22 +1089,23 @@ def get_ip_destination_groups_lite_command(args):
             'ReadableContentsFormat': formats['markdown'],
             'HumanReadable': tableToMarkdown(("IPv4 Destination groups lite"
                                                   + f"({len(contents)})"),
-                                                 contents),
-            'EntryContext': {'Zscaler.IPDestinationGroup': contents},
+                                                 contents, removeNull=True),
+            'EntryContext': None,
         }
 
     return entry
 
 def delete_ip_destination_group(args):
-    ip_group_id = str(args.get('ip_group_id', '')).strip()
-    cmd_url = f"/ipDestinationGroups/{ip_group_id}"
-    response = http_request('DELETE', cmd_url, None, DEFAULT_HEADERS)
+    ip_group_ids = argToList(args.get('ip_group_id', ''))
+    for ip_group_id in ip_group_ids:
+        cmd_url = f"/ipDestinationGroups/{ip_group_id}"
+        response = http_request('DELETE', cmd_url, None, DEFAULT_HEADERS)
     entry = {
         'Type': entryTypes['note'],
         'Contents': None,
         'ContentsFormat': formats['json'],
         'ReadableContentsFormat': formats['markdown'],
-        'HumanReadable': "IP Destination Group {} deleted successfully".format(ip_group_id),
+        'HumanReadable': "IP Destination Group {} deleted successfully".format(ip_group_ids),
         'EntryContext': None
     }
     return entry
@@ -1170,7 +1175,7 @@ def main():  # pragma: no cover
                 return_results(get_departments_command(demisto.args()))
             elif command == 'zscaler-get-usergroups':
                 return_results(get_usergroups_command(demisto.args()))
-            elif command == 'zscaler-get-ip-destination-groups-lite':
+            elif command == 'zscaler-list-ip-destination-groups-lite':
                 return_results(get_ip_destination_groups_lite_command(demisto.args()))
             elif command == 'zscaler-delete-ip-destination-group':
                 return_results(delete_ip_destination_group(demisto.args()))
