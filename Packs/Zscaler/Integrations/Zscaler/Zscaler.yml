@@ -1838,6 +1838,7 @@ script:
     arguments:
     - name: ip_group_id
       description: The unique identifier for the IP destination group.
+      isArray: true
       type: textArea
     - name: exclude_type
       auto: PREDEFINED
@@ -1849,12 +1850,23 @@ script:
       description: The IP group type to be excluded from results.
       type: textArea
     - name: include_ipv6
-      default: true
       auto: PREDEFINED
       predefined:
       - "True"
       - "False"
       description: Retrieve IPv6 destination groups
+      defaultValue: "False"
+      type: textArea
+    - name: limit
+      description: Limit to results to be showcased, defaulted with the value 50 if nothing given as input
+      defaultValue: "50"
+      type: textArea
+    - name: all_results
+      auto: PREDEFINED
+      predefined:
+      - "True"
+      - "False"
+      description: Boolean value for user to choose, if wanted to get all results at once or not
       defaultValue: "False"
       type: textArea
     outputs:
@@ -1883,7 +1895,7 @@ script:
   runonce: false
   script: ''
   subtype: python3
-  dockerimage: demisto/python3:3.10.11.55362
+  dockerimage: demisto/python3:3.10.11.57293
   type: python
 fromversion: 5.0.0
 tests:

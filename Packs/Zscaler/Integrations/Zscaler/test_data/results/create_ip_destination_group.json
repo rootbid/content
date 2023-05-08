@@ -15,7 +15,7 @@
     },
     "ContentsFormat": "json",
     "ReadableContentsFormat": "markdown",
-    "HumanReadable": "### IP Destination group created\n|Addresses|Countries|Description|ID|IpCategories|IsNonEditable|Name|Type|\n|---|---|---|---|---|---|---|---|\n| 127.0.0.2,<br>127.0.0.1 |  | Localhost | 2000359 |  | false | Test99 | DSTN_IP |\n",
+    "HumanReadable": "### IPv4 Destination group created\n|ID|Name|Type|Description|Addresses|IsNonEditable|\n|---|---|---|---|---|---|\n| 2000359 | Test99 | DSTN_IP | Localhost | 127.0.0.2,<br>127.0.0.1 | false |\n",
     "EntryContext": {
       "Zscaler.IPDestinationGroup": {
         "ID": 2000359, 
