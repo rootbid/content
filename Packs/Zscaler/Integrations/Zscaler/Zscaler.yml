@@ -517,6 +517,18 @@ script:
       predefined:
       - 'true'
       - 'false'
+    - name: limit
+      description: Limit to results to be showcased, defaulted with the value 50 if nothing given as input
+      defaultValue: "50"
+      type: textArea
+    - name: all_results
+      auto: PREDEFINED
+      predefined:
+      - "True"
+      - "False"
+      description: Boolean value for user to choose, if wanted to get all results at once or not
+      defaultValue: "False"
+      type: textArea
     description: Retrieves name and ID dictionary of IPv4/IPv6 destination groups.
     name: zscaler-list-ip-destination-groups-lite
   - arguments:

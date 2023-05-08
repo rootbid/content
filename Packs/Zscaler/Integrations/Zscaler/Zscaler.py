@@ -1014,7 +1014,7 @@ def set_user_command(args):
     else:
         return responseJson
 
-def get_contents_lite(responses, ip_type):
+def get_contents_lite(responses):
     contents = list()
     for response in responses:
         content = dict()
@@ -1027,12 +1027,14 @@ def get_contents_lite(responses, ip_type):
             else:
                 content[key.capitalize()] = value
         contents.append(content)
-    return {ip_type: contents}
+    return contents
 
 def get_ip_destination_groups_lite_command(args):
     exclude_type = str(args.get('exclude_type', '')).strip()
     category_type = argToList(args.get('type', ''))
     include_ipv6 = argToBoolean(args.get('include_IPv6', False))
+    limit = arg_to_number(args.get('limit', 50))
+    all_results = argToBoolean(args.get('all_results', False))
     if include_ipv6:
         ipv4_cmd_url = "/ipDestinationGroups/lite"
         ipv6_cmd_url = "/ipDestinationGroups/ipv6DestinationGroups/lite"
@@ -1050,14 +1052,14 @@ def get_ip_destination_groups_lite_command(args):
         except json.decoder.JSONDecodeError as exp:
             return_error(f'Falied to execute zscaler-get-ip-destination-groups-lite command. Error: {str(exp)}')
 
-        ipv4_contents = get_contents_lite(ipv4_responses, "IPv4")
-        ipv6_contents = get_contents_lite(ipv6_responses, "IPv6")
+        ipv4_contents = get_contents_lite(ipv4_responses) if all_results else get_contents_lite(ipv4_responses)[:limit]
+        ipv6_contents = get_contents_lite(ipv6_responses) if all_results else get_contents_lite(ipv6_responses)[:limit]
         s_content = {
             **ipv4_contents,
             **ipv6_contents
         }
-        hr = tableToMarkdown(f"IPv4 Destination groups lite({len(ipv4_contents['IPv4'])})", ipv4_contents['IPv4'])
-        hr += tableToMarkdown(f"IPv6 Destination groups lite({len(ipv6_contents['IPv6'])})", ipv6_contents['IPv6'], removeNull=True)
+        hr = tableToMarkdown(f"IPv4 Destination groups lite ({len(ipv4_contents)})", ipv4_contents)
+        hr += tableToMarkdown(f"IPv6 Destination groups lite ({len(ipv6_contents)})", ipv6_contents, removeNull=True)
         entry = {
             'Type': entryTypes['note'],
             'Contents': s_content,
@@ -1080,7 +1082,7 @@ def get_ip_destination_groups_lite_command(args):
         except json.decoder.JSONDecodeError as exp:
             return_error(f'Falied to execute zscaler-get-ip-destination-groups-lite command. Error: {str(exp)}')
 
-        contents = get_contents_lite(responses, "IPv4")["IPv4"]
+        contents = get_contents_lite(responses) if all_results else get_contents_lite(responses)[:limit]
 
         entry = {
             'Type': entryTypes['note'],
