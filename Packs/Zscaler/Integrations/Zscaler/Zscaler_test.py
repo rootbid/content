@@ -27,7 +27,8 @@ def run_command_test(command_func, args, response_path, expected_result_path, mo
         response = ResponseMock(json.load(response_f))
     mocker.patch('Zscaler.http_request', return_value=response)
     if command_func.__name__ in ['url_lookup', 'get_users_command', 'set_user_command',
-                                 'get_departments_command', 'get_usergroups_command', 'get_ip_destination_groups_lite_command', 'delete_ip_destination_group']:
+                                 'get_departments_command', 'get_usergroups_command',
+                                 'get_ip_destination_groups_lite_command', 'delete_ip_destination_group']:
         res = command_func(args)
     else:
         res = command_func(**args)
@@ -567,6 +568,7 @@ def test_get_usergroups_command(mocker):
                      expected_result_path='test_data/results/get_usergroups.json',
                      mocker=mocker)
 
+
 def test_list_ip_destination_groups_lite_command(mocker):
     """zscaler-list-ip-destination-groups-lite"""
     import Zscaler
@@ -575,6 +577,7 @@ def test_list_ip_destination_groups_lite_command(mocker):
                      response_path='test_data/responses/list_ip_destination_groups_lite.json',
                      expected_result_path='test_data/results/list_ip_destination_groups_lite.json',
                      mocker=mocker)
+
 
 def test_delete_ip_destination_group(mocker):
     """zscaler-delete-ip-destination-group"""

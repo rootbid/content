@@ -1014,6 +1014,7 @@ def set_user_command(args):
     else:
         return responseJson
 
+
 def get_contents_lite(responses):
     contents = list()
     for response in responses:
@@ -1028,6 +1029,7 @@ def get_contents_lite(responses):
                 content[key.capitalize()] = value
         contents.append(content)
     return contents
+
 
 def get_ip_destination_groups_lite_command(args):
     exclude_type = str(args.get('exclude_type', '')).strip()
@@ -1044,7 +1046,7 @@ def get_ip_destination_groups_lite_command(args):
             exclude_type_param = "?"
         type_params = [f"type={t}" for t in category_type]
         type_params_str = "&".join(type_params)
-        ipv4_cmd_url += exclude_type_param +  type_params_str
+        ipv4_cmd_url += exclude_type_param + type_params_str
         ipv6_cmd_url += exclude_type_param + type_params_str
         try:
             ipv4_responses = http_request('GET', ipv4_cmd_url).json()
@@ -1076,7 +1078,7 @@ def get_ip_destination_groups_lite_command(args):
             exclude_type_param = "?"
         type_params = [f"type={t}" for t in category_type]
         type_params_str = "&".join(type_params)
-        cmd_url += exclude_type_param +  type_params_str
+        cmd_url += exclude_type_param + type_params_str
         try:
             responses = http_request('GET', cmd_url).json()
         except json.decoder.JSONDecodeError as exp:
@@ -1090,27 +1092,47 @@ def get_ip_destination_groups_lite_command(args):
             'ContentsFormat': formats['json'],
             'ReadableContentsFormat': formats['markdown'],
             'HumanReadable': tableToMarkdown(("IPv4 Destination groups lite"
-                                                  + f"({len(contents)})"),
-                                                 contents, removeNull=True),
+                                             + f"({len(contents)})"),
+                                             contents, removeNull=True),
             'EntryContext': None,
         }
 
     return entry
 
+
 def delete_ip_destination_group(args):
     ip_group_ids = argToList(args.get('ip_group_id', ''))
+    contents = list()
     for ip_group_id in ip_group_ids:
+        check_url = f"/ipDestinationGroups/{ip_group_id}"
+        try:
+            check_response = http_request('GET', check_url).json()
+        except json.decoder.JSONDecodeError as exp:
+            return_error(f'Failed to execute locate ip-destination group with id {ip_group_id} command. Error: {str(exp)}')
         cmd_url = f"/ipDestinationGroups/{ip_group_id}"
         response = http_request('DELETE', cmd_url, None, DEFAULT_HEADERS)
+        content = {
+            'ID': check_response.get('id', ''),
+            'Name': check_response.get('name', ''),
+            'Type': check_response.get('type', ''),
+            'Description': check_response.get('description', ''),
+            'Addresses': check_response.get('addresses', []),
+            'IpCategories': check_response.get('ipCategories', []),
+            'Countries': check_response.get('countries', []),
+            'deleted': True
+        }
+        contents.append(content)
+
     entry = {
         'Type': entryTypes['note'],
         'Contents': None,
         'ContentsFormat': formats['json'],
         'ReadableContentsFormat': formats['markdown'],
         'HumanReadable': "IP Destination Group {} deleted successfully".format(ip_group_ids),
-        'EntryContext': None
+        'EntryContext': {'Zscaler.IPDestinationGroup(val.ID && val.ID === obj.ID)': contents}
     }
     return entry
+
 
 ''' EXECUTION CODE '''
 

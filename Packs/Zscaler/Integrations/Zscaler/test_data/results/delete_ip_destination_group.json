@@ -4,5 +4,18 @@
     "ContentsFormat": "json",
     "ReadableContentsFormat": "markdown",
     "HumanReadable": "IP Destination Group ['1964949'] deleted successfully",
-    "EntryContext": null
+    "EntryContext": {
+        "Zscaler.IPDestinationGroup(val.ID && val.ID === obj.ID)": [
+            {
+                "ID": "", 
+                "Name": "", 
+                "Type": "",
+                "Description": "",
+                "Addresses": [],
+                "IpCategories": [],
+                "Countries": [],
+                "deleted": true
+            }
+        ]
+    }
 }
