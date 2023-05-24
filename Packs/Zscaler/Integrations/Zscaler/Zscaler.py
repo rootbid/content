@@ -104,11 +104,12 @@ def http_request(method, url_suffix, data=None, headers=None, num_of_seconds_to_
             elif res.status_code in (401, 403):
                 raise AuthorizationError(res.content)
             elif res.status_code == 400 and method == 'PUT' and '/urlCategories/' in url_suffix:
-                raise Exception('Bad request, This could be due to reaching your organizations quota.'
-                                ' For more info about your quota usage, run the command zscaler-url-quota.')
+                return_error(
+                    """Bad request, This could be due to reaching your organizations quota.
+                    \nFor more info about your quota usage, run the command zscaler-url-quota.""")
             else:
                 if res.status_code in ERROR_CODES_DICT:
-                    raise Exception('Your request failed with the following error: {}.\nMessage: {}'.format(
+                    return_error('Your request failed with the following error: {}.\nMessage: {}'.format(
                         ERROR_CODES_DICT[res.status_code], res.text))
                 else:
                     raise Exception('Your request failed with the following error: {}.\nMessage: {}'.format(
@@ -1287,34 +1288,16 @@ def edit_ip_destination_group(args: dict):
 
 def delete_ip_destination_groups(args):
     ip_group_ids = argToList(args.get('ip_group_id', ''))
-    contents = list()
     for ip_group_id in ip_group_ids:
-        check_url = f"/ipDestinationGroups/{ip_group_id}"
-        try:
-            check_response = http_request('GET', check_url).json()
-        except json.decoder.JSONDecodeError as exp:
-            return_error(f'Failed to execute locate ip-destination group with id {ip_group_id} command. Error: {str(exp)}')
         cmd_url = f"/ipDestinationGroups/{ip_group_id}"
         _ = http_request('DELETE', cmd_url, None, DEFAULT_HEADERS)
-        content = {
-            'ID': check_response.get('id', ''),
-            'Name': check_response.get('name', ''),
-            'Type': check_response.get('type', ''),
-            'Description': check_response.get('description', ''),
-            'Addresses': check_response.get('addresses', []),
-            'IpCategories': check_response.get('ipCategories', []),
-            'Countries': check_response.get('countries', []),
-            'deleted': True
-        }
-        contents.append(content)
-
     entry = {
         'Type': entryTypes['note'],
         'Contents': None,
         'ContentsFormat': formats['json'],
         'ReadableContentsFormat': formats['markdown'],
-        'HumanReadable': "IP Destination Group {} deleted successfully".format(ip_group_ids),
-        'EntryContext': {'Zscaler.IPDestinationGroup(val.ID && val.ID === obj.ID)': contents}
+        'HumanReadable': "IP Destination Group {} deleted successfully".format(','.join(ip_group_ids)),
+        'EntryContext': None
     }
     return entry
 

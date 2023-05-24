@@ -1079,7 +1079,7 @@ Gets a list of all IP destination groups or the IP destination group information
 | exclude_type | The IP group type to be excluded from results. | Optional | 
 | include_ipv6 | It's boolean value to Include IPv6 destination groups | Optional | 
 | category_type | The IP group type to be filtered from results. Possible values are: DSTN_IP, DSTN_FQDN, DSTN_DOMAIN, DSTN_OTHER. | Optional |
-| lite | It's boolean value to retrive lite version of the list-ip-destination-group-command | Optional |
+| lite | It's boolean value to retrive limited version of the list-ip-destination-group-command | Optional |
 
 
 #### Context Output
