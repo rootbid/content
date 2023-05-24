@@ -1883,7 +1883,7 @@ script:
       predefined:
       - "True"
       - "False"
-      description: Boolean value for user to choose, To retrive limited version of command(ID,Name,Type).
+      description: Boolean value for user to choose, To retrieve only limited information of IP Destination groups. Includes ID, Name and Type of the IP Destination groups.
       defaultValue: "False"
       type: textArea
     outputs:
